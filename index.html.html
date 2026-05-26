@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Engagement of Mohamad & Perla</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500&family=Great+Vibes&family=Amiri+Quran&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-dark: #AA8A2A;
+            --cream: #FDFBF7;
+            --charcoal: #1A1A1A;
+            --emerald: #0F1C15;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--charcoal);
+            color: var(--cream);
+            overflow: hidden; /* Hidden initially for the envelope overlay */
+        }
+
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .font-script {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .font-quran {
+            font-family: 'Amiri Quran', serif;
+        }
+
+        /* New Luxury Wide Quran Font Style */
+        .font-quran-luxury {
+            font-family: 'Amiri Quran', serif;
+            display: inline-block;
+            transform: scaleX(1.2) scaleY(1.1); /* Refined proportions for elegance */
+            /* Metallic Gold Foil Effect */
+            background: linear-gradient(to right, #BF953F, #FCF6BA, #D4AF37, #FBF5B7, #AA771C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            /* FIX: Massive padding to completely stop the browser from clipping the tall/wide Arabic text */
+            padding: 40px 30px;
+            line-height: 2.2;
+            overflow: visible;
+            /* Using drop-shadow instead of text-shadow for better clipping support */
+            filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.8)) drop-shadow(0px 0px 15px rgba(212, 175, 55, 0.4));
+        }
+
+        .text-gold {
+            color: var(--gold);
+        }
+
+        .bg-gold {
+            background-color: var(--gold);
+        }
+
+        .border-gold {
+            border-color: var(--gold);
+        }
+
+        /* Classy Deep Background */
+        .bg-classy {
+            background-color: #0a0a0a;
+            /* Warm dark overlay layered over the image to keep text readable.
+               Note: Using a web-hosted placeholder for the preview. When you host the site, replace this URL with 'wedding-rings-lie-rose.jpg' */
+            background-image: 
+                radial-gradient(circle at center, rgba(30, 20, 15, 0.3) 0%, rgba(10, 5, 5, 0.95) 100%),
+                url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* Particles Overlay */
+        #canvas-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        /* Smooth reveal transitions */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Button Styling */
+        .btn-luxury {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-luxury::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--gold);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s ease;
+            z-index: -1;
+        }
+
+        .btn-luxury:hover {
+            color: var(--charcoal);
+        }
+
+        .btn-luxury:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Form Inputs */
+        input, select {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(253, 251, 247, 0.3);
+            color: var(--cream);
+            border-radius: 0;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-bottom-color: var(--gold);
+        }
+
+        select option {
+            background-color: var(--charcoal);
+            color: var(--cream);
+        }
+
+        /* Hide number arrows */
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        /* SVG Corners styling */
+        .corner-ornament {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            pointer-events: none;
+        }
+        .top-left { top: 15px; left: 15px; }
+        .top-right { top: 15px; right: 15px; transform: scaleX(-1); }
+        .bottom-left { bottom: 15px; left: 15px; transform: scaleY(-1); }
+        .bottom-right { bottom: 15px; right: 15px; transform: scale(-1, -1); }
+    </style>
+</head>
+<body class="antialiased selection:bg-[var(--gold)] selection:text-[var(--charcoal)] bg-classy">
+
+    <!-- Welcome Overlay with Interactive Envelope -->
+    <div id="welcome-overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-classy transition-all duration-1000 ease-in-out">
+        
+        <div id="envelope-container" class="relative w-[340px] h-[240px] cursor-pointer group" style="perspective: 1200px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8));">
+            <!-- Envelope Back -->
+            <div class="absolute inset-0 rounded-sm" style="background: linear-gradient(135deg, #111, #222);"></div>
+            
+            <!-- The Invitation Card Inside -->
+            <div id="env-letter" class="absolute left-3 right-3 top-3 bottom-3 bg-[var(--cream)] flex flex-col items-center justify-center text-center px-4 z-10 origin-bottom shadow-[0_0_20px_rgba(0,0,0,0.5)] border border-[var(--gold)]">
+                <!-- Inner gold frame -->
+                <div class="absolute inset-1 border border-[var(--gold)] opacity-40"></div>
+                <div class="text-[var(--gold)] text-5xl font-script mb-2 relative z-10">M & P</div>
+                <div class="text-[var(--charcoal)] text-[10px] tracking-[0.2em] uppercase relative z-10">August 08, 2026</div>
+            </div>
+
+            <!-- Envelope Flaps with Gold Foil Edges using drop-shadow -->
+            <div class="absolute inset-0 z-20 pointer-events-none overflow-hidden rounded-sm">
+                <!-- Left Flap -->
+                <div class="absolute inset-0" style="filter: drop-shadow(2px 0 1px rgba(212, 175, 55, 0.4));">
+                    <div class="w-full h-full" style="clip-path: polygon(0 0, 50% 50%, 0 100%); background: linear-gradient(to right, #1a1a1a, #2a2a2a);"></div>
+                </div>
+                <!-- Right Flap -->
+                <div class="absolute inset-0" style="filter: drop-shadow(-2px 0 1px rgba(212, 175, 55, 0.4));">
+                    <div class="w-full h-full" style="clip-path: polygon(100% 0, 50% 50%, 100% 100%); background: linear-gradient(to left, #1a1a1a, #2a2a2a);"></div>
+                </div>
+                <!-- Bottom Flap -->
+                <div class="absolute inset-0" style="filter: drop-shadow(0 -2px 1px rgba(212, 175, 55, 0.4));">
+                    <div class="w-full h-full" style="clip-path: polygon(0 100%, 50% 50%, 100% 100%); background: linear-gradient(to top, #151515, #252525);"></div>
+                </div>
+            </div>
+
+            <!-- Top Flap (Opens on click) -->
+            <div id="env-flap" class="absolute top-0 left-0 w-full h-full z-30 origin-top flex items-start justify-center transition-transform duration-[1s]" style="transform-style: preserve-3d; filter: drop-shadow(0 2px 1px rgba(212,175,55,0.5)) drop-shadow(0 10px 15px rgba(0,0,0,0.8));">
+                <!-- Outer Flap Texture (Visible when closed) -->
+                <div class="absolute inset-0 w-full h-full" style="clip-path: polygon(0 0, 100% 0, 50% 55%); background: linear-gradient(to bottom, #333, #111); backface-visibility: hidden;"></div>
+                <!-- Inner Flap Texture (Visible when open) -->
+                <div class="absolute inset-0 w-full h-full" style="clip-path: polygon(0 0, 100% 0, 50% 55%); background: linear-gradient(to top, #222, #0a0a0a); transform: rotateX(180deg); backface-visibility: hidden;"></div>
+            </div>
+            
+            <!-- Luxury 3D Wax Seal -->
+            <div id="env-seal" class="absolute top-[55%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full z-40 flex items-center justify-center transition-all duration-[0.4s] group-hover:scale-105" style="background: radial-gradient(circle at 30% 30%, #F5D76E, #D4AF37 60%, #8A6D1C); box-shadow: 0 8px 20px rgba(0,0,0,0.8), inset 0 0 10px rgba(0,0,0,0.4); border: 1px solid #E5C158;">
+                <div class="w-14 h-14 rounded-full border border-[rgba(255,255,255,0.3)] flex items-center justify-center">
+                    <span class="font-script text-[#5a4611] text-2xl font-bold drop-shadow-sm">M<span class="text-lg mx-0.5">&</span>P</span>
+                </div>
+            </div>
+        </div>
+
+        <p id="tap-text" class="absolute bottom-16 text-[var(--gold)] tracking-[0.3em] uppercase text-xs animate-pulse opacity-80">Tap to Open</p>
+    </div>
+
+    <canvas id="canvas-overlay"></canvas>
+
+    <!-- Main Content (Hidden initially) -->
+    <div id="main-content" class="relative z-10 opacity-0 hidden transition-opacity duration-[1.5s] ease-in">
+        
+        <!-- Decorative Border Frame for the whole page -->
+        <div class="fixed inset-4 border border-[var(--gold)] opacity-30 pointer-events-none z-50 rounded-sm"></div>
+
+        <section class="min-h-screen flex flex-col items-center justify-center text-center px-4 relative pt-20 pb-12">
+            
+            <!-- Ornate SVG corners for Hero -->
+            <svg class="corner-ornament top-left" viewBox="0 0 100 100" fill="none" stroke="var(--gold)" stroke-width="1">
+                <path d="M0,100 L0,0 L100,0 M15,85 L15,15 L85,15 M30,70 L30,30 L70,30" opacity="0.6"/>
+            </svg>
+            <svg class="corner-ornament top-right" viewBox="0 0 100 100" fill="none" stroke="var(--gold)" stroke-width="1">
+                <path d="M0,100 L0,0 L100,0 M15,85 L15,15 L85,15 M30,70 L30,30 L70,30" opacity="0.6"/>
+            </svg>
+
+            <div class="fade-up w-full flex flex-col items-center overflow-visible">
+                <!-- Removed w-full to prevent bounding box clipping, balanced margins to account for the new padding -->
+                <div class="font-quran-luxury text-2xl sm:text-3xl md:text-4xl lg:text-5xl -mt-6 mb-4 text-center" dir="rtl">
+                    ༺ بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ ༻
+                </div>
+                <p class="uppercase tracking-[0.4em] text-[10px] text-gray-400 mb-8 relative z-10">Together with their families</p>
+                <h1 class="text-7xl md:text-8xl lg:text-9xl mb-4 font-script text-white tracking-wide">
+                    Mohamad<br>
+                    <span class="text-4xl md:text-6xl text-[var(--gold)] serif italic">&</span><br>
+                    Perla
+                </h1>
+                <p class="text-lg md:text-2xl italic serif text-gray-300 mt-6 mb-16">Request the honor of your presence<br>at their engagement celebration</p>
+                
+                <div class="flex items-center justify-center space-x-6 mb-16">
+                    <div class="h-px w-16 bg-gradient-to-r from-transparent to-[var(--gold)]"></div>
+                    <p class="uppercase tracking-[0.3em] text-sm text-[var(--gold)] font-medium">08 . 08 . 2026</p>
+                    <div class="h-px w-16 bg-gradient-to-l from-transparent to-[var(--gold)]"></div>
+                </div>
+            </div>
+
+            <!-- Scroll indicator -->
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-60 animate-bounce">
+                <span class="text-[8px] uppercase tracking-[0.2em] mb-2">Scroll</span>
+                <div class="w-px h-8 bg-[var(--gold)]"></div>
+            </div>
+        </section>
+
+        <section class="py-24 px-4 bg-black/40 backdrop-blur-md relative border-y border-[var(--gold)] border-opacity-20 shadow-2xl">
+            <div class="max-w-4xl mx-auto text-center fade-up">
+                <h2 class="text-3xl md:text-4xl serif text-[var(--gold)] mb-12">The Countdown</h2>
+                
+                <div id="countdown" class="inline-flex flex-wrap justify-center items-center gap-6 md:gap-0 bg-black/30 backdrop-blur-md border border-[var(--gold)] border-opacity-30 p-8 md:p-12 shadow-[0_10px_30px_rgba(0,0,0,0.5)] rounded-sm">
+                    <!-- Day -->
+                    <div class="flex flex-col items-center w-24 md:w-32">
+                        <span id="days" class="text-4xl md:text-6xl serif text-white drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">00</span>
+                        <span class="text-[9px] uppercase tracking-[0.3em] text-[var(--gold)] mt-4">Days</span>
+                    </div>
+                    <!-- Divider -->
+                    <div class="hidden md:block w-px h-20 bg-gradient-to-b from-transparent via-[var(--gold)] to-transparent opacity-40"></div>
+                    <!-- Hour -->
+                    <div class="flex flex-col items-center w-24 md:w-32">
+                        <span id="hours" class="text-4xl md:text-6xl serif text-white drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">00</span>
+                        <span class="text-[9px] uppercase tracking-[0.3em] text-[var(--gold)] mt-4">Hours</span>
+                    </div>
+                    <!-- Divider -->
+                    <div class="hidden md:block w-px h-20 bg-gradient-to-b from-transparent via-[var(--gold)] to-transparent opacity-40"></div>
+                    <!-- Min -->
+                    <div class="flex flex-col items-center w-24 md:w-32">
+                        <span id="minutes" class="text-4xl md:text-6xl serif text-white drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">00</span>
+                        <span class="text-[9px] uppercase tracking-[0.3em] text-[var(--gold)] mt-4">Mins</span>
+                    </div>
+                    <!-- Divider -->
+                    <div class="hidden md:block w-px h-20 bg-gradient-to-b from-transparent via-[var(--gold)] to-transparent opacity-40"></div>
+                    <!-- Sec -->
+                    <div class="flex flex-col items-center w-24 md:w-32">
+                        <span id="seconds" class="text-4xl md:text-6xl serif text-white drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">00</span>
+                        <span class="text-[9px] uppercase tracking-[0.3em] text-[var(--gold)] mt-4">Secs</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-32 px-4 relative">
+            <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-16 fade-up">
+                
+                <!-- Luxurious Arched Frame, inspired by your image -->
+                <div class="w-full md:w-1/2 relative h-[600px] flex items-center justify-center p-4">
+                    <div class="absolute inset-0 bg-black/20 backdrop-blur-sm border border-[var(--gold)] border-opacity-30 rounded-sm z-0"></div>
+                    <div class="relative z-10 w-full h-full max-w-md bg-gradient-to-b from-white/10 to-transparent backdrop-blur-lg border-4 border-[var(--gold)] rounded-t-full flex flex-col items-center justify-center shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-8 text-center">
+                        <!-- Decorative top element -->
+                        <div class="text-white/50 text-xs uppercase tracking-[0.3em] mb-6">Welcome to the celebration of</div>
+                        
+                        <h2 class="text-5xl md:text-6xl font-script text-white mb-2 leading-tight drop-shadow-lg">Mohamad</h2>
+                        <div class="text-3xl md:text-4xl text-[var(--gold)] serif italic my-2">&</div>
+                        <h2 class="text-5xl md:text-6xl font-script text-white mb-8 leading-tight drop-shadow-lg">Perla</h2>
+                        
+                        <div class="flex items-center justify-center space-x-6">
+                            <div class="h-px w-12 bg-gradient-to-r from-transparent to-white/50"></div>
+                            <p class="text-white serif text-xl tracking-widest">08.08.2026</p>
+                            <div class="h-px w-12 bg-gradient-to-l from-transparent to-white/50"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-1/2 text-center md:text-left">
+                    <h2 class="text-4xl md:text-5xl serif text-white mb-6">The Details</h2>
+                    <p class="text-gray-400 text-sm leading-loose mb-8">
+                        Join us for an evening of elegance, celebration, and love as we take the first step towards our forever. Dress to impress in your finest formal attire.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="mt-1 text-[var(--gold)]">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-[var(--gold)] tracking-widest uppercase text-xs mb-1">The Venue</h3>
+                                <p class="text-white serif text-xl">ma mna3ref wen ba3ed</p>
+                                <p class="text-[var(--gold)] text-sm mt-1">Beirut, Lebanon</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="mt-1 text-[var(--gold)]">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-[var(--gold)] tracking-widest uppercase text-xs mb-1">The Time</h3>
+                                <p class="text-white serif text-xl">7:00 in the Evening</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="rsvp" class="py-32 px-4 bg-black/40 backdrop-blur-md relative border-t border-[var(--gold)] border-opacity-20 shadow-2xl">
+            <svg class="corner-ornament bottom-left" viewBox="0 0 100 100" fill="none" stroke="var(--gold)" stroke-width="1">
+                <path d="M0,100 L0,0 L100,0 M15,85 L15,15 L85,15 M30,70 L30,30 L70,30" opacity="0.6"/>
+            </svg>
+            <svg class="corner-ornament bottom-right" viewBox="0 0 100 100" fill="none" stroke="var(--gold)" stroke-width="1">
+                <path d="M0,100 L0,0 L100,0 M15,85 L15,15 L85,15 M30,70 L30,30 L70,30" opacity="0.6"/>
+            </svg>
+
+            <div class="max-w-xl mx-auto border border-[var(--gold)] border-opacity-40 p-10 md:p-16 bg-black/60 backdrop-blur-lg relative fade-up shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#0a0a0a] px-4 border border-[var(--gold)] border-opacity-40 rounded-full">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1" class="my-2"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="6.5"/></svg>
+                </div>
+
+                <div class="text-center mb-12 mt-6">
+                    <h2 class="text-4xl serif text-white mb-3">Kindly Respond</h2>
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500">By the first of July, 2026</p>
+                </div>
+
+                <form id="rsvpForm" class="space-y-8">
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] mb-2">Guest Name(s)</label>
+                        <input type="text" id="name" required placeholder="M. & Mme." class="w-full py-3 text-lg serif placeholder-gray-700 transition">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] mb-2">Will you attend?</label>
+                            <select id="attendance" class="w-full py-3 text-lg serif cursor-pointer transition">
+                                <option value="accepts">Joyfully Accepts</option>
+                                <option value="declines">Regretfully Declines</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] mb-2">Party Size</label>
+                            <input type="number" id="guests" min="1" max="5" value="1" class="w-full py-3 text-lg serif text-center transition">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full btn-luxury py-4 uppercase text-[10px] tracking-[0.3em] mt-8 font-medium">Send Reply</button>
+                </form>
+                
+                <div id="formFeedback" class="hidden mt-8 text-center border border-[var(--gold)] p-4">
+                    <p class="text-[var(--gold)] serif italic text-lg" id="feedbackMessage"></p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-12 border-t border-[var(--gold)] border-opacity-20 text-center px-4 relative z-10 bg-black/20">
+            <p class="font-script text-4xl mb-3 text-white">Mohamad & Perla</p>
+            <p class="text-[9px] uppercase tracking-[0.4em] text-[var(--gold)]">August Eighth . Twenty Twenty-Six</p>
+        </footer>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="bg-music" loop>
+        <!-- Place your actual mp3 file in the same folder and name it la-la-land-piano.mp3 -->
+        <source src="la-la-land-piano.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Music Control Button -->
+    <button id="music-toggle" class="fixed bottom-6 right-6 z-50 w-10 h-10 bg-black/50 backdrop-blur-md border border-[var(--gold)] rounded-full flex items-center justify-center text-[var(--gold)] opacity-0 transition-all duration-1000 pointer-events-none hidden hover:bg-[var(--gold)] hover:text-[var(--charcoal)] hover:scale-110">
+        <svg id="icon-pause" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        <svg id="icon-play" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="hidden"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </button>
+
+    <script>
+        /* === ENVELOPE INTERACTION LOGIC === */
+        const overlay = document.getElementById('welcome-overlay');
+        const container = document.getElementById('envelope-container');
+        const flap = document.getElementById('env-flap');
+        const seal = document.getElementById('env-seal');
+        const letter = document.getElementById('env-letter');
+        const mainContent = document.getElementById('main-content');
+        const tapText = document.getElementById('tap-text');
+
+        /* Audio Variables */
+        const bgMusic = document.getElementById('bg-music');
+        const musicToggle = document.getElementById('music-toggle');
+        const iconPlay = document.getElementById('icon-play');
+        const iconPause = document.getElementById('icon-pause');
+        let isPlaying = false;
+        let playPromise; // Track the audio promise to prevent AbortError
+
+        let isOpened = false;
+
+        container.addEventListener('click', () => {
+            if (isOpened) return;
+            isOpened = true;
+
+            // Start Audio safely
+            bgMusic.volume = 0.5;
+            playPromise = bgMusic.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                }).catch(e => {
+                    console.log("Audio play failed (waiting for file or interaction):", e);
+                    isPlaying = false;
+                });
+            }
+
+            // 1. Hide tap text and break seal
+            tapText.style.opacity = '0';
+            seal.style.transform = 'translate(-50%, -50%) scale(1.1)'; // Tiny pop before breaking
+            
+            setTimeout(() => {
+                seal.style.transform = 'translate(-50%, -50%) scale(0)';
+                seal.style.opacity = '0';
+            }, 200);
+
+            // 2. Open Flap elegantly
+            setTimeout(() => {
+                flap.style.transform = 'rotateX(180deg)';
+                flap.style.zIndex = '10'; // Push it behind the letter as it rises
+            }, 600);
+
+            // 3. Slide letter up gracefully for admiration
+            setTimeout(() => {
+                letter.style.transition = 'transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 1.2s ease';
+                letter.style.transform = 'translateY(-140px)';
+                letter.style.zIndex = '50'; // Bring in front of flaps
+                letter.style.boxShadow = '0 30px 60px rgba(0,0,0,0.9)';
+            }, 1400);
+
+            // 4. Cinematic Zoom - Card swoops into the camera while envelope fades
+            setTimeout(() => {
+                letter.style.transition = 'transform 1.2s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s ease 0.2s';
+                letter.style.transform = 'translateY(-140px) scale(12)'; // Massive zoom
+                letter.style.opacity = '0';
+                
+                container.style.transition = 'opacity 1s ease';
+                container.style.opacity = '0';
+            }, 3000);
+
+            // 5. Reveal the main site flawlessly
+            setTimeout(() => {
+                overlay.style.opacity = '0'; 
+                
+                // Show and fade in main content
+                mainContent.classList.remove('hidden');
+                musicToggle.classList.remove('hidden');
+
+                setTimeout(() => {
+                    mainContent.classList.add('opacity-100');
+                    musicToggle.classList.remove('opacity-0');
+                    musicToggle.classList.remove('pointer-events-none');
+                    document.body.style.overflow = 'auto'; // Re-enable scrolling
+                    overlay.style.display = 'none'; // Remove from flow
+                    
+                    // Trigger initial scroll animations
+                    checkReveal();
+                }, 50);
+
+            }, 3800);
+        });
+
+        /* === MUSIC TOGGLE LOGIC === */
+        musicToggle.addEventListener('click', () => {
+            if (isPlaying) {
+                // Wait for the playPromise to resolve before calling pause to prevent AbortError
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        bgMusic.pause();
+                        isPlaying = false;
+                        iconPause.classList.add('hidden');
+                        iconPlay.classList.remove('hidden');
+                    }).catch(error => {
+                        console.log("Pause error or previously interrupted:", error);
+                    });
+                } else {
+                    bgMusic.pause();
+                    isPlaying = false;
+                    iconPause.classList.add('hidden');
+                    iconPlay.classList.remove('hidden');
+                }
+            } else {
+                playPromise = bgMusic.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        isPlaying = true;
+                        iconPlay.classList.add('hidden');
+                        iconPause.classList.remove('hidden');
+                    }).catch(error => {
+                        console.log("Play failed:", error);
+                    });
+                }
+            }
+        });
+
+        /* === SCROLL REVEAL ANIMATIONS === */
+        const revealElements = document.querySelectorAll('.fade-up');
+        
+        function checkReveal() {
+            const windowHeight = window.innerHeight;
+            const revealPoint = 100; // Trigger earlier
+
+            revealElements.forEach(el => {
+                const revealTop = el.getBoundingClientRect().top;
+                if (revealTop < windowHeight - revealPoint) {
+                    el.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', checkReveal);
+
+
+        /* === LUXURY PARTICLE CANVAS (Subtle dust/stars) === */
+        const canvas = document.getElementById('canvas-overlay');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.random() * 0.2 - 0.1;
+                this.speedY = Math.random() * -0.3 - 0.1; // Float upwards slightly
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`; // Gold particles
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 60; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        initParticles();
+        animate();
+
+        /* === COUNTDOWN LOGIC === */
+        const targetDate = new Date('August 8, 2026 19:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const gap = targetDate - now;
+
+            if (gap < 0) return; // Stop if date passed
+
+            const second = 1000;
+            const minute = second * 60;
+            const hour = minute * 60;
+            const day = hour * 24;
+
+            const d = Math.floor(gap / day);
+            const h = Math.floor((gap % day) / hour);
+            const m = Math.floor((gap % hour) / minute);
+            const s = Math.floor((gap % minute) / second);
+
+            document.getElementById('days').innerText = d < 10 ? '0' + d : d;
+            document.getElementById('hours').innerText = h < 10 ? '0' + h : h;
+            document.getElementById('minutes').innerText = m < 10 ? '0' + m : m;
+            document.getElementById('seconds').innerText = s < 10 ? '0' + s : s;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        /* === RSVP FORM SUBMISSION === */
+        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('name').value;
+            const attendance = document.getElementById('attendance').value;
+            const feedbackContainer = document.getElementById('formFeedback');
+            const feedbackMessage = document.getElementById('feedbackMessage');
+            
+            // Extract first name/word for a personal touch
+            const firstName = nameInput.split(' ')[0] || "Guest";
+            
+            if (attendance === 'accepts') {
+                feedbackMessage.innerText = `We are thrilled, ${firstName}. We look forward to celebrating with you!`;
+            } else {
+                feedbackMessage.innerText = `You will be missed, ${firstName}. Thank you for letting us know.`;
+            }
+            
+            feedbackContainer.classList.remove('hidden');
+            this.style.display = 'none'; // Hide form after submission for cleaner look
+        });
+    </script>
+</body>
+</html>
